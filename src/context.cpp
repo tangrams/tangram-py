@@ -144,8 +144,7 @@ void initGL(int width, int height) {
     }
 
     glfwWindowHint(GLFW_SAMPLES, 2);
-    
-    window = glfwCreateWindow(width, height, "", NULL, NULL);
+    window = glfwCreateWindow(width, height, "Tangram ES", NULL, NULL);
     if (!window) {
         glfwTerminate();
     }

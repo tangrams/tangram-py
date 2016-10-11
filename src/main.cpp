@@ -18,13 +18,22 @@
 
 #include "utils.h"
 
-std::unique_ptr<Tangram::Map> map;
+// Tangram
+Tangram::Map* map = nullptr;
 
 // Internal communication between THREADS
 std::atomic<bool> bRun(true);
 std::vector<std::string> queue; // Commands Queue
 std::mutex queueMutex;
 
+std::string style = "scene.yaml";
+double lat = 0.0f;   // Default lat position
+double lon = 0.0f;   // Default lng position
+float zoom = 0.0f;   // Default zoom of the scene
+float rot = 0.0f;    // Default rotation of the scene (deg)
+float tilt = 0.0f;   // Default tilt angle (deg)
+int width = 800;     // Default Width of the image (will be multipl by 2 for the antialiasing)
+int height = 480;    // Default height of the image (will be multipl by 2 for the antialiasing)
 double lastTime;
 
 //============================================================================== CONTROL THREADS
@@ -50,14 +59,14 @@ int main(int argc, char* argv[]) {
 
     // Start OpenGL ES context
     LOG("Creating OpenGL ES context");
-    initGL(800, 600);
+    initGL(width, height);
 
     LOG("Creating a new TANGRAM instances");
-    map = std::unique_ptr<Tangram::Map>(new Tangram::Map());
-    map->loadSceneAsync("scene.yaml");
+    map = new Tangram::Map();
+    map->loadSceneAsync(style.c_str());
     map->setupGL();
     map->setPixelScale(1.);
-    map->resize(800, 600);
+    map->resize(width, height);
     updateTangram();
 
     lastTime = getTime();
@@ -88,8 +97,14 @@ int main(int argc, char* argv[]) {
     }
 
     finishUrlRequests();
-    curl_global_cleanup();
+    curl_global_cleanup();    
     closeGL();
+
+    if (map) {
+        delete map;
+        map = nullptr;
+    }
+
 
     // Force cinWatcher to finish (because is waiting for input)
     pthread_t consoleHandler = console.native_handle();
@@ -102,7 +117,6 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-
 //============================================================================== MAIN FUNCTION
 void updateTangram () {
     bool bFinish = false;
@@ -114,5 +128,88 @@ void updateTangram () {
         // Update Network Queue
         processNetworkQueue();
         bFinish = map->update(delta);
+    }
+}
+
+void processCommand (std::string &_command) {
+    if (map) {
+        std::vector<std::string> elements = split(_command, ' ');
+        if (elements[0] == "scene") {
+            if (elements.size() == 1) {
+                std::cout << style << std::endl;
+            }
+            else {
+                style = elements[1];
+                resetTimer(_command);
+                map->loadSceneAsync(style.c_str());
+            }
+        }
+        else if (elements[0] == "zoom") {
+            if (elements.size() == 1) {
+                std::cout << zoom << std::endl;
+            }
+            else if (zoom != toFloat(elements[1])) {
+                zoom = toFloat(elements[1]);
+                resetTimer(_command);
+                LOG("Set zoom: %f", zoom);
+                map->setZoom(zoom);
+            }
+        }
+        else if (elements[0] == "tilt") {
+            if (elements.size() == 1) {
+                std::cout << tilt << std::endl;
+            }
+            else if (tilt != toFloat(elements[1])) {
+                tilt = toFloat(elements[1]);
+                resetTimer(_command);
+                LOG("Set tilt: %f", tilt);
+                map->setTilt(tilt);
+            }
+        }
+        else if (elements[0] == "rotate") {
+            if (elements.size()) {
+                std::cout << rot << std::endl;
+            }
+            else if (rot != toFloat(elements[1])) {
+                rot = toFloat(elements[1]);
+                resetTimer(_command);
+                LOG("Set rotation: %f", rot);
+                map->setRotation(rot);
+            }
+        }
+        else if (elements.size() > 2 && elements[0] == "position") {
+            if (elements.size() == 1) {
+                std::cout << lon << 'x' << lat << std::endl;
+            }
+            else if (lon != toDouble(elements[1]) || lat != toDouble(elements[2])) {
+                lon = toDouble(elements[1]);
+                lat = toDouble(elements[2]);
+                resetTimer(_command);
+                LOG("Set position: %f (lon), %f (lat)", lon, lat);
+                map->setPosition(lon, lat); 
+            }
+
+            if (elements.size() == 4) {
+                zoom = toFloat(elements[3]);
+                resetTimer(_command);
+                LOG("Set zoom: %f", zoom);
+                map->setZoom(zoom);
+            }  
+        }
+        else if (elements[0] == "size") {
+            if (elements.size() == 1) {
+                std::cout << width << "x" << height << std::endl;
+            }
+            else if (width != toInt(elements[1]) || height != toInt(elements[2])) {
+                width = toInt(elements[1]);
+                height = toInt(elements[2]);
+                resetTimer(_command);
+                // resize(width, height);
+                map->resize(width, height);
+            }
+        }
+    }
+    else {
+        LOG("No TANGRAM instance");
     }
 }

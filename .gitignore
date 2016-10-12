@@ -1,6 +1,7 @@
 .DS_Store
 scripts/build/
 scripts/tangram-es/
+tangram/tangram-py
 
 # Compiled python modules.
 *.pyc

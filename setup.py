@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='tangram',
@@ -10,8 +10,7 @@ setup(
     maintainer="Patricio Gonzalez Vivo",
     maintainer_email="patricio@mapzen.com",
     license='MIT',
-    packages = [
-        'tangram'
-    ],
-    package_dir={"": "src"},
+    packages=find_packages(exclude=('scripts')),
+    package_dir={'tangram': 'tangram'},
+    package_data={'tangram': ['tangram-py']},
 )

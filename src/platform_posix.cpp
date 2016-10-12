@@ -26,20 +26,11 @@ static bool s_isContinuousRendering = false;
 static UrlWorker s_Workers[NUM_WORKERS];
 static std::list<std::unique_ptr<UrlTask>> s_urlTaskQueue;
 
-static double startTime = 0.0;
-
 void logMsg(const char* fmt, ...) {
-    std::string str = std::to_string(getTime()-startTime) + " - " + fmt;
     va_list args;
     va_start(args, fmt);
-    vfprintf(stderr, str.c_str(), args);
+    vfprintf(stderr, fmt, args);
     va_end(args);
-}
-
-void resetTimer(std::string _msg) {
-    LOG(" ");
-    startTime = getTime();
-    LOG("START %s",_msg.c_str());
 }
 
 void processNetworkQueue() {

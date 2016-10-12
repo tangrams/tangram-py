@@ -7,7 +7,7 @@ class Tangram:
 
     def __init__(self):
         print os.path.dirname(__file__)
-        self.process = subprocess.Popen([os.path.dirname(__file__) + '/' + self.TANGRAM_BINNARY], shell=False, stdin=subprocess.PIPE) #, stdout=subprocess.PIPE) #, stderr=subprocess.PIPE)
+        self.process = subprocess.Popen([os.path.dirname(__file__) + '/' + self.TANGRAM_BINNARY], shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE) #, stderr=subprocess.PIPE)
 
     def loadScene(self, _scene):
         self.process.stdin.write('scene '+_scene+'\n')

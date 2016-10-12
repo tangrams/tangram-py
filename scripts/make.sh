@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# If something goes wrong terminate this script
-# set -e
+set -e
 
 OS=$(uname)
 DIST="UNKNOWN"

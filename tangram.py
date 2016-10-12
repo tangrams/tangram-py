@@ -33,7 +33,7 @@ class Tangram:
 tangram = Tangram()
 
 tangram.loadScene('https://tangrams.github.io/tron/tron.yaml')
-tangram.setPosition(-73.9772,40.7809,100);
-tangram.setZoom(20,100);
+tangram.setPosition(-73.9772,40.7809);
+tangram.setZoom(20);
 
 

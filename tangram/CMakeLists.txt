@@ -24,6 +24,14 @@ find_sources_and_include_directories(
     ${PROJECT_SOURCE_DIR}/src/*.h 
     ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
+# FIND_PACKAGE(PythonLibs)
+if (${PYTHONLIBS_FOUND})
+    include_directories(${PYTHON_INCLUDE_DIRS})
+else()
+    message(SEND_ERROR "No python libraries found")
+    return()
+endif()
+
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")
 
@@ -92,8 +100,6 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
 
 endif()
 
-
-
 # add sources and include headers
 find_sources_and_include_directories(
     ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.h
@@ -111,10 +117,12 @@ include_directories(${CORE_INCLUDE_DIRS})
 include_directories(${CORE_LIBRARIES_INCLUDE_DIRS})
 
 # add executable
-add_executable(${EXECUTABLE_NAME} ${SOURCES})
+# add_executable(${EXECUTABLE_NAME} ${SOURCES})
+add_library(${EXECUTABLE_NAME} STATIC ${SOURCES})
 
 # link libraries
 target_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY})
+target_link_libraries(${EXECUTABLE_NAME} ${PYTHON_LIBRARIES})
 target_link_libraries(${EXECUTABLE_NAME} -lcurl)
 
 if(${PLATFORM_TARGET} MATCHES "linux")
@@ -133,6 +141,5 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
 
 endif()
 
-add_resources(${EXECUTABLE_NAME} "${PROJECT_SOURCE_DIR}/scenes")
-
-install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
+# add_resources(${EXECUTABLE_NAME} "${PROJECT_SOURCE_DIR}/scenes")
+# install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)

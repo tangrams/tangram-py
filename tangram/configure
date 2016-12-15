@@ -68,6 +68,9 @@ elif [ $OS == "Darwin" ]; then
     N_CORES="4"
     CMAKE_ARG="-DPLATFORM_TARGET=osx"
 fi
+
+# Make SWIG wrap 
+swig -c++ -python -o src/tangram_wrap.cpp src/tangram.i 
     
 if [ "$2" == "xcode" ]; then
     echo "Making XCode project"

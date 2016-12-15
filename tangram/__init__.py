@@ -1,1 +1,1 @@
-from tangram-proxy import *
+import tangram

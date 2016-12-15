@@ -8,7 +8,6 @@
 #include "context.h"
 #include "platform_posix.h" // Darwin Linux and RPi
 
-#include "utils.h"
 #include <curl/curl.h>      // Curl
 
 #define KEY_ZOOM_IN  45     // -
@@ -67,32 +66,27 @@ void TangramRender() {
 void onKeyPress(int _key) {
     keyPressed = _key;
 
-    if ( _key == 'q' || _key == 'Q'){
-        bRun = false;
-        bRun.store(false);
-    } else {
-        switch (_key) {
-            case KEY_ZOOM_IN:
-                map->handlePinchGesture(0.0,0.0,0.5,0.0);
-                break;
-            case KEY_ZOOM_OUT:
-                map->handlePinchGesture(0.0,0.0,2.0,0.0);
-                break;
-            case KEY_UP:
-                map->handlePanGesture(0.0,0.0,0.0,100.0);
-                break;
-            case KEY_DOWN:
-                map->handlePanGesture(0.0,0.0,0.0,-100.0);
-                break;
-            case KEY_LEFT:
-                map->handlePanGesture(0.0,0.0,100.0,0.0);
-                break;
-            case KEY_RIGHT:
-                map->handlePanGesture(0.0,0.0,-100.0,0.0);
-                break;
-            // default:
-            //     LOG(" -> %i\n",_key);
-        }
+    switch (_key) {
+        case KEY_ZOOM_IN:
+            map->handlePinchGesture(0.0,0.0,0.5,0.0);
+            break;
+        case KEY_ZOOM_OUT:
+            map->handlePinchGesture(0.0,0.0,2.0,0.0);
+            break;
+        case KEY_UP:
+            map->handlePanGesture(0.0,0.0,0.0,100.0);
+            break;
+        case KEY_DOWN:
+            map->handlePanGesture(0.0,0.0,0.0,-100.0);
+            break;
+        case KEY_LEFT:
+            map->handlePanGesture(0.0,0.0,100.0,0.0);
+            break;
+        case KEY_RIGHT:
+            map->handlePanGesture(0.0,0.0,-100.0,0.0);
+            break;
+        // default:
+        //     LOG(" -> %i\n",_key);
     }
 }
 

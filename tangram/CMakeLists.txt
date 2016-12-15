@@ -17,20 +17,21 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/tangram-es/external/alfons/CMakeLists.txt")
 endif()
 
 # common compiler options
-set(EXECUTABLE_NAME "tangram-proxy")
+set(EXECUTABLE_NAME "tangram")
+
+find_package(SWIG REQUIRED)
+find_package(PythonLibs REQUIRED)
+include(${SWIG_USE_FILE})
+include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_SWIG_FLAGS "")
+set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(src/tangram.i PROPERTIES SWIG_FLAGS "-includeall")
 
 # add sources and include headers
 find_sources_and_include_directories(
     ${PROJECT_SOURCE_DIR}/src/*.h 
     ${PROJECT_SOURCE_DIR}/src/*.cpp)
-
-# FIND_PACKAGE(PythonLibs)
-if (${PYTHONLIBS_FOUND})
-    include_directories(${PYTHON_INCLUDE_DIRS})
-else()
-    message(SEND_ERROR "No python libraries found")
-    return()
-endif()
 
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")
@@ -116,9 +117,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/core)
 include_directories(${CORE_INCLUDE_DIRS})
 include_directories(${CORE_LIBRARIES_INCLUDE_DIRS})
 
-# add executable
-# add_executable(${EXECUTABLE_NAME} ${SOURCES})
-add_library(${EXECUTABLE_NAME} STATIC ${SOURCES})
+# add Library
+add_library(${EXECUTABLE_NAME} SHARED ${SOURCES})
 
 # link libraries
 target_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY})
@@ -141,5 +141,12 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
 
 endif()
 
+swig_add_module(${EXECUTABLE_NAME} python src/tangram.i ${SOURCES})
+swig_link_libraries(${EXECUTABLE_NAME} ${PYTHON_LIBRARIES})
+
+execute_process(COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+install(TARGETS _${EXECUTABLE_NAME} DESTINATION ${PYTHON_SITE_PACKAGES})
+install(FILES ${CMAKE_BINARY_DIR}/src/${EXECUTABLE_NAME}.py DESTINATION ${PYTHON_SITE_PACKAGES})
+message(STATUS "Python destination folder" ${PYTHON_SITE_PACKAGES})
 # add_resources(${EXECUTABLE_NAME} "${PROJECT_SOURCE_DIR}/scenes")
 # install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)

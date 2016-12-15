@@ -70,7 +70,7 @@ elif [ $OS == "Darwin" ]; then
 fi
 
 # Make SWIG wrap 
-swig -c++ -python -o src/tangram_wrap.cpp src/tangram.i 
+#swig -c++ -python -o src/tangram_wrap.cxx src/tangram.i 
     
 if [ "$2" == "xcode" ]; then
     echo "Making XCode project"
@@ -82,4 +82,6 @@ else
     cmake . -Bbuild $CMAKE_ARG
     cd build
     make -j $N_CORES
+    # cp lib/libtangram.* ..
+    # cd ..
 fi

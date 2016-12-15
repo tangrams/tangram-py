@@ -2,8 +2,10 @@
 
 #include <time.h>
 #include <sys/time.h>
+#include <string>
+#include <iostream>
+
 #include "glm/gtc/matrix_transform.hpp"
-#include "utils.h"
 
 // Common global variables
 //----------------------------------------------------
@@ -253,8 +255,7 @@ void updateGL(){
 
         static int frame_count = 0.;
         if (fDelta > 0.25) {
-            std::string title = appTitle + ":..: FPS:" + toString(frame_count / fDelta);
-            glfwSetWindowTitle(window, title.c_str());
+            glfwSetWindowTitle(window, appTitle.c_str());
             frame_count = 0;
         }
         frame_count++;

@@ -6,11 +6,6 @@ project(tangram)
 # helper functions
 include(${PROJECT_SOURCE_DIR}/tangram-es/toolchains/utils.cmake)
 
-# cmake output configuration
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 if(NOT EXISTS "${PROJECT_SOURCE_DIR}/tangram-es/external/alfons/CMakeLists.txt")
     message(SEND_ERROR "Missing submodules - Please run:\n 'git submodule update --init --recursive'")
     return()
@@ -18,15 +13,6 @@ endif()
 
 # common compiler options
 set(EXECUTABLE_NAME "tangram")
-
-find_package(SWIG REQUIRED)
-find_package(PythonLibs REQUIRED)
-include(${SWIG_USE_FILE})
-include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-set(CMAKE_SWIG_FLAGS "")
-set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
-set_source_files_properties(src/tangram.i PROPERTIES SWIG_FLAGS "-includeall")
 
 # add sources and include headers
 find_sources_and_include_directories(
@@ -117,36 +103,26 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/core)
 include_directories(${CORE_INCLUDE_DIRS})
 include_directories(${CORE_LIBRARIES_INCLUDE_DIRS})
 
-# add Library
-add_library(${EXECUTABLE_NAME} SHARED ${SOURCES})
-
-# link libraries
-target_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY})
-target_link_libraries(${EXECUTABLE_NAME} ${PYTHON_LIBRARIES})
-target_link_libraries(${EXECUTABLE_NAME} -lcurl)
-
-if(${PLATFORM_TARGET} MATCHES "linux")
-    target_link_libraries(${EXECUTABLE_NAME} glfw)
-    target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
-    target_link_libraries(${EXECUTABLE_NAME} -lfontconfig)
-    target_link_libraries(${EXECUTABLE_NAME} -lfreetype)
-
-elseif(${PLATFORM_TARGET} MATCHES "rpi")
-    target_link_libraries(${EXECUTABLE_NAME} -lfontconfig)
-    target_link_libraries(${EXECUTABLE_NAME} -lfreetype)
-
-elseif(${PLATFORM_TARGET} MATCHES "osx")
-    target_link_libraries(${EXECUTABLE_NAME} glfw)
-    target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
-
-endif()
+find_package(SWIG REQUIRED)
+find_package(PythonLibs REQUIRED)
+include(${SWIG_USE_FILE})
+include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_SWIG_FLAGS "")
+set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(src/tangram.i PROPERTIES SWIG_FLAGS "-includeall")
 
 swig_add_module(${EXECUTABLE_NAME} python src/tangram.i ${SOURCES})
-swig_link_libraries(${EXECUTABLE_NAME} ${PYTHON_LIBRARIES})
+
+if(${PLATFORM_TARGET} MATCHES "linux")
+    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} fontconfig freetype)
+elseif(${PLATFORM_TARGET} MATCHES "rpi")
+    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl  fontconfig freetype)
+elseif(${PLATFORM_TARGET} MATCHES "osx")
+    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES})
+endif()
 
 execute_process(COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
 install(TARGETS _${EXECUTABLE_NAME} DESTINATION ${PYTHON_SITE_PACKAGES})
 install(FILES ${CMAKE_BINARY_DIR}/src/${EXECUTABLE_NAME}.py DESTINATION ${PYTHON_SITE_PACKAGES})
 message(STATUS "Python destination folder" ${PYTHON_SITE_PACKAGES})
-# add_resources(${EXECUTABLE_NAME} "${PROJECT_SOURCE_DIR}/scenes")
-# install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)

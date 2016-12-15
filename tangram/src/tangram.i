@@ -1,12 +1,12 @@
-%module example
+%module tangram
 %{
-extern void TangramInit(int width, int height);
-extern void TangramUpdate();
-extern void TangramRender();
-extern void TangramClose();
+extern void start(int width, int height);
+extern void update();
+extern void render();
+extern void close();
 %}
 
-extern void TangramInit(int width, int height);
-extern void TangramUpdate();
-extern void TangramRender();
-extern void TangramClose();
+extern void start(int width, int height);
+extern void update();
+extern void render();
+extern void close();

@@ -70,7 +70,7 @@ elif [ $OS == "Darwin" ]; then
 fi
 
 # Make SWIG wrap 
-#swig -c++ -python -o src/tangram_wrap.cxx src/tangram.i 
+# swig -c++ -python -o src/tangram_wrap.cpp src/tangram.i 
     
 if [ "$2" == "xcode" ]; then
     echo "Making XCode project"

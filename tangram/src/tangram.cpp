@@ -1,5 +1,3 @@
-#include "tangram-proxy.h"
-
 #include "tangram.h"        // Tangram-ES
 #include "platform.h"       // Tangram platform specifics
 #include "log.h"
@@ -32,7 +30,7 @@ int width = 800;     // Default Width of the image (will be multipl by 2 for the
 int height = 480;    // Default height of the image (will be multipl by 2 for the antialiasing)
 int keyPressed = 0;
 
-void TangramInit(int width, int height) {
+void start(int width, int height) {
      // Initialize cURL
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -49,7 +47,7 @@ void TangramInit(int width, int height) {
     map->resize(getWindowWidth(), getWindowHeight());
 }
 
-void TangramUpdate() {
+void update() {
     // Update Network Queue
     processNetworkQueue();
 
@@ -58,7 +56,7 @@ void TangramUpdate() {
     map->update(getDelta());
 }
 
-void TangramRender() {
+void render() {
     map->render();
     renderGL();
 }
@@ -123,7 +121,7 @@ void onViewportResize(int _newWidth, int _newHeight) {
     }
 }
 
-void TangramClose() {
+void close() {
     finishUrlRequests();
     curl_global_cleanup();    
     closeGL();

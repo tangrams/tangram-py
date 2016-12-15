@@ -123,6 +123,6 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
 endif()
 
 execute_process(COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-install(TARGETS _${EXECUTABLE_NAME} DESTINATION ${PYTHON_SITE_PACKAGES})
-install(FILES ${CMAKE_BINARY_DIR}/src/${EXECUTABLE_NAME}.py DESTINATION ${PYTHON_SITE_PACKAGES})
+install(FILES _tangram DESTINATION ${PYTHON_SITE_PACKAGES})
+install(FILES ${CMAKE_BINARY_DIR}/src/tangram.py DESTINATION ${PYTHON_SITE_PACKAGES})
 message(STATUS "Python destination folder" ${PYTHON_SITE_PACKAGES})

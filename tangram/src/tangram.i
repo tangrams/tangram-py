@@ -1,12 +1,7 @@
 %module tangram
 %{
-extern void start(int width, int height);
-extern void update();
-extern void render();
-extern void close();
+    #define SWIG_FILE_WITH_INIT
+    #include "tangram-proxy.h"
 %}
 
-extern void start(int width, int height);
-extern void update();
-extern void render();
-extern void close();
+%include "tangram-proxy.h"

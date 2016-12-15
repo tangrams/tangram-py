@@ -17,7 +17,7 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/tangram-es/external/alfons/CMakeLists.txt")
 endif()
 
 # common compiler options
-set(EXECUTABLE_NAME "tangram-py")
+set(EXECUTABLE_NAME "tangram-proxy")
 
 # add sources and include headers
 find_sources_and_include_directories(
@@ -116,11 +116,16 @@ add_executable(${EXECUTABLE_NAME} ${SOURCES})
 # link libraries
 target_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY})
 target_link_libraries(${EXECUTABLE_NAME} -lcurl)
-target_link_libraries(${EXECUTABLE_NAME} prime_server)
 
 if(${PLATFORM_TARGET} MATCHES "linux")
     target_link_libraries(${EXECUTABLE_NAME} glfw)
     target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
+    target_link_libraries(${EXECUTABLE_NAME} -lfontconfig)
+    target_link_libraries(${EXECUTABLE_NAME} -lfreetype)
+
+elseif(${PLATFORM_TARGET} MATCHES "rpi")
+    target_link_libraries(${EXECUTABLE_NAME} -lfontconfig)
+    target_link_libraries(${EXECUTABLE_NAME} -lfreetype)
 
 elseif(${PLATFORM_TARGET} MATCHES "osx")
     target_link_libraries(${EXECUTABLE_NAME} glfw)
@@ -129,3 +134,5 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
 endif()
 
 add_resources(${EXECUTABLE_NAME} "${PROJECT_SOURCE_DIR}/scenes")
+
+install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)

@@ -46,4 +46,3 @@ void onMouseMove(float _x, float _y);
 void onMouseClick(float _x, float _y, int _button);
 void onMouseDrag(float _x, float _y, int _button);
 void onViewportResize(int _width, int _height);
-

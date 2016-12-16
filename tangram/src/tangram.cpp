@@ -6,21 +6,23 @@
 #include "context.h"
 #include "platform_posix.h" // Darwin Linux and RPi
 
+#include <iostream>
 #include <curl/curl.h>      // Curl
 
 #define KEY_ZOOM_IN  45     // -
 #define KEY_ZOOM_OUT 61     // =
-#define KEY_UP       119    // w
-#define KEY_LEFT     97     // a
-#define KEY_RIGHT    115    // s
-#define KEY_DOWN     122    // z
+#define KEY_UP       265
+#define KEY_LEFT     263
+#define KEY_RIGHT    262
+#define KEY_DOWN     264
 #define KEY_ROTATE   82     // r
 #define KEY_TILT     84     // t
+#define KEY_ESC      256
 
 // Tangram
 Tangram::Map* map = nullptr;
 
-std::string style = "./scene.yaml";
+// std::string style = "http://tangrams.github.io/tangram-sandbox/styles/default.yaml";
 double lat = 0.0f;   // Default lat position
 double lon = 0.0f;   // Default lng position
 float zoom = 0.0f;   // Default zoom of the scene
@@ -30,36 +32,64 @@ int width = 800;     // Default Width of the image (will be multipl by 2 for the
 int height = 480;    // Default height of the image (will be multipl by 2 for the antialiasing)
 int keyPressed = 0;
 
-void start(int width, int height) {
+void load(char * style, int width, int height) {
      // Initialize cURL
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
     // Start OpenGL ES context
     LOG("Creating OpenGL ES context");
     initGL(width, height);
-    float deviceRatio = getDevicePixelRatio();
 
     LOG("Creating a new TANGRAM instances");
     map = new Tangram::Map();
-    map->loadSceneAsync(style.c_str());
+    map->loadSceneAsync(style);
     map->setupGL();
-    map->setPixelScale(deviceRatio);
+    map->setPixelScale(getDevicePixelRatio());
     map->resize(getWindowWidth(), getWindowHeight());
 }
 
-void update() {
+bool update() {
     // Update Network Queue
     processNetworkQueue();
 
     // Update Tangram
     updateGL();
-    map->update(getDelta());
+    return map->update(getDelta());
 }
 
 void render() {
     map->render();
     renderGL();
 }
+
+void close() {
+    finishUrlRequests();
+    curl_global_cleanup();    
+    closeGL();
+
+    if (map) {
+        delete map;
+        map = nullptr;
+    }
+}
+
+void setPosition(double _lon, double _lat) {
+    map->resize(_lon,_lat);
+}
+
+void setZoom(float _z) {
+    map->setZoom(_z);
+}
+
+void setRotation(float _radians) {
+    map->setRotation(_radians);
+}
+
+void setTilt(float _radians) {
+    map->setTilt(_radians);
+}
+
+
 
 void onKeyPress(int _key) {
     keyPressed = _key;
@@ -83,8 +113,11 @@ void onKeyPress(int _key) {
         case KEY_RIGHT:
             map->handlePanGesture(0.0,0.0,-100.0,0.0);
             break;
-        // default:
-        //     LOG(" -> %i\n",_key);
+        case KEY_ESC:
+            close();
+            break;
+        default:
+            LOG(" -> %i\n",_key);
     }
 }
 
@@ -121,13 +154,3 @@ void onViewportResize(int _newWidth, int _newHeight) {
     }
 }
 
-void close() {
-    finishUrlRequests();
-    curl_global_cleanup();    
-    closeGL();
-
-    if (map) {
-        delete map;
-        map = nullptr;
-    }
-}

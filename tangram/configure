@@ -82,6 +82,8 @@ else
     cmake . -Bbuild $CMAKE_ARG
     cd build
     make -j $N_CORES
-    # cp lib/libtangram.* ..
-    # cd ..
+    cd ..
 fi
+
+cp build/_tangram.so .
+cp build/tangram.py ./__init__.py

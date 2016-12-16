@@ -14,11 +14,6 @@ endif()
 # common compiler options
 set(EXECUTABLE_NAME "tangram")
 
-# add sources and include headers
-find_sources_and_include_directories(
-    ${PROJECT_SOURCE_DIR}/src/*.h 
-    ${PROJECT_SOURCE_DIR}/src/*.cpp)
-
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")
 
@@ -46,7 +41,8 @@ elseif(${PLATFORM_TARGET} MATCHES "linux")
     set(CORE_COMPILE_DEFS PLATFORM_LINUX)
     
     # compiler options
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fpermissive -g -std=c++1y")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fpermissive -g -std=c++1y -fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer")
     set(CXX_FLAGS_DEBUG "-g -O0")
 
@@ -78,7 +74,7 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
     add_definitions(-DPLATFORM_OSX)
 
     # compiler options
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -std=c++1y")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -std=c++1y ")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wreturn-type -Wsign-compare")
     set(CXX_FLAGS_DEBUG "-g -O0")
 
@@ -87,35 +83,38 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
 
 endif()
 
-# add sources and include headers
-find_sources_and_include_directories(
-    ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.h
-    ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.cpp)
-
-# add sources and include headers
-find_sources_and_include_directories(
-    ${PROJECT_SOURCE_DIR}/tangram-es/core/common/platform_gl.h
-    ${PROJECT_SOURCE_DIR}/tangram-es/core/common/platform_gl.cpp)
+include(FindPkgConfig)
+pkg_check_modules(FC REQUIRED fontconfig)
 
 # add sources and include headers
 add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/external)
 add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/core)
 include_directories(${CORE_INCLUDE_DIRS})
-include_directories(${CORE_LIBRARIES_INCLUDE_DIRS})
+include_directories(${CORE_LIBRARIES_INCLUDE_DIRS} ${FC_INCLUDE_DIRS})
+
+set(SOURCES
+  ${PROJECT_SOURCE_DIR}/src/context.cpp
+  ${PROJECT_SOURCE_DIR}/src/tangram.cpp
+  ${PROJECT_SOURCE_DIR}/src/platform_posix.cpp
+  ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.cpp
+  ${PROJECT_SOURCE_DIR}/tangram-es/core/common/platform_gl.cpp)
 
 find_package(SWIG REQUIRED)
 find_package(PythonLibs REQUIRED)
 include(${SWIG_USE_FILE})
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/tangram-es/core/)
+include_directories(${PROJECT_SOURCE_DIR}/tangram-es/linux/src)
+include_directories(${PROJECT_SOURCE_DIR}/tangram-es/core/common)
+
 set(CMAKE_SWIG_FLAGS "")
 set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
-set_source_files_properties(src/tangram.i PROPERTIES SWIG_FLAGS "-includeall")
+#set_source_files_properties(src/tangram.i PROPERTIES SWIG_FLAGS "-includeall")
 
 swig_add_module(${EXECUTABLE_NAME} python src/tangram.i ${SOURCES})
-
 if(${PLATFORM_TARGET} MATCHES "linux")
-    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} fontconfig freetype)
+    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} ${FC_LIBRARIES} freetype -lpthread)
 elseif(${PLATFORM_TARGET} MATCHES "rpi")
     swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl  fontconfig freetype)
 elseif(${PLATFORM_TARGET} MATCHES "osx")

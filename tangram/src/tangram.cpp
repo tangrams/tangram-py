@@ -20,7 +20,7 @@
 // Tangram
 Tangram::Map* map = nullptr;
 
-std::string style = "scene.yaml";
+std::string style = "./scene.yaml";
 double lat = 0.0f;   // Default lat position
 double lon = 0.0f;   // Default lng position
 float zoom = 0.0f;   // Default zoom of the scene

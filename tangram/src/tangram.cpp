@@ -89,7 +89,9 @@ void setTilt(float _radians) {
     map->setTilt(_radians);
 }
 
-
+void setPixelScale(float _pixelsPerPoint) {
+    map->setPixelScale(_pixelsPerPoint);
+}
 
 void onKeyPress(int _key) {
     keyPressed = _key;

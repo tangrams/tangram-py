@@ -11,6 +11,8 @@ void setPosition(double _lon, double _lat);
 void setZoom(float _z);
 void setRotation(float _radians);
 void setTilt(float _radians);
+
+void setPixelScale(float _pixelsPerPoint);
 %}
 
 void load(char * style, int width, int height);
@@ -22,3 +24,5 @@ void setPosition(double _lon, double _lat);
 void setZoom(float _z);
 void setRotation(float _radians);
 void setTilt(float _radians);
+
+void setPixelScale(float _pixelsPerPoint);

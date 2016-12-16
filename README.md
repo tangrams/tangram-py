@@ -7,7 +7,7 @@ cd tangram-py/tangram
 ```
 
 
-## Research
+## Example
 
 ```bash
 swig -python example.i
@@ -22,7 +22,6 @@ ld -bundle -flat_namespace -macosx_version_min 10.12 -undefined suppress -o _exa
 - http://swig.org/tutorial.html
 - http://www.expobrain.net/2011/01/23/swig-tutorial-for-mac-os-x/
 
-### Examples
+### Other cases
 
 - https://github.com/johnglover/pyof
-- https://github.com/lygstate/tangram-es/tree/master/core/api

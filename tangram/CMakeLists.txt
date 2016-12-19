@@ -90,7 +90,14 @@ pkg_check_modules(FC REQUIRED fontconfig)
 add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/external)
 add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/core)
 include_directories(${CORE_INCLUDE_DIRS})
-include_directories(${CORE_LIBRARIES_INCLUDE_DIRS} ${FC_INCLUDE_DIRS})
+# include_directories(${CORE_LIBRARIES_INCLUDE_DIRS} ${FC_INCLUDE_DIRS})
+include_directories(${FC_INCLUDE_DIRS})
+if(${PLATFORM_TARGET} MATCHES "linux")
+    message(STATUS "fontconfig at " ${FC_INCLUDE_DIRS})
+elseif(${PLATFORM_TARGET} MATCHES "rpi")
+elseif(${PLATFORM_TARGET} MATCHES "osx")
+endif()
+
 
 set(SOURCES
   ${PROJECT_SOURCE_DIR}/src/context.cpp
@@ -114,7 +121,7 @@ set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
 
 swig_add_module(${EXECUTABLE_NAME} python src/tangram.i ${SOURCES})
 if(${PLATFORM_TARGET} MATCHES "linux")
-    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} ${FC_LIBRARIES} fontconfig freetype -lpthread)
+    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} ${FC_LIBRARIES} freetype -lpthread)
 elseif(${PLATFORM_TARGET} MATCHES "rpi")
     swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl fontconfig freetype)
 elseif(${PLATFORM_TARGET} MATCHES "osx")

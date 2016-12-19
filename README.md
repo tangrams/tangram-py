@@ -6,17 +6,6 @@ cd tangram-py/tangram
 ./configure
 ```
 
-
-## Example
-
-```bash
-swig -python example.i
-
-gcc -c example.c example_wrap.c -I/System/Library/Frameworks/Python.framework/Versions/2.6/include/python2.6/
-
-ld -bundle -flat_namespace -macosx_version_min 10.12 -undefined suppress -o _example.so *.o
-```
-
 ### Resources
 
 - http://swig.org/tutorial.html

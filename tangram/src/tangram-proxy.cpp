@@ -1,3 +1,5 @@
+#include "tangram-proxy.h"
+
 #include "tangram.h"        // Tangram-ES
 #include "platform.h"       // Tangram platform specifics
 #include "log.h"
@@ -155,4 +157,3 @@ void onViewportResize(int _newWidth, int _newHeight) {
         map->resize(getWindowWidth(), getWindowHeight());
     }
 }
-

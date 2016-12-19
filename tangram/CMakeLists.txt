@@ -97,7 +97,7 @@ include_directories(${CORE_LIBRARIES_INCLUDE_DIRS} )
 
 set(SOURCES
   ${PROJECT_SOURCE_DIR}/src/context.cpp
-  ${PROJECT_SOURCE_DIR}/src/tangram.cpp
+  ${PROJECT_SOURCE_DIR}/src/tangram-proxy.cpp
   ${PROJECT_SOURCE_DIR}/src/platform_posix.cpp
   ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.cpp
   ${PROJECT_SOURCE_DIR}/tangram-es/core/common/platform_gl.cpp)

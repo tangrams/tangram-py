@@ -34,7 +34,7 @@ int width = 800;     // Default Width of the image (will be multipl by 2 for the
 int height = 480;    // Default height of the image (will be multipl by 2 for the antialiasing)
 int keyPressed = 0;
 
-void load(char * style, int width, int height) {
+void init(char * style, int width, int height) {
      // Initialize cURL
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -48,6 +48,22 @@ void load(char * style, int width, int height) {
     map->setupGL();
     map->setPixelScale(getDevicePixelRatio());
     map->resize(getWindowWidth(), getWindowHeight());
+}
+
+void loadScene(char * style, bool _useScenePosition) {
+    map->loadScene(style, _useScenePosition);
+}
+
+void loadSceneAsync(char * style, bool _useScenePosition) {
+    map->loadSceneAsync(style, _useScenePosition);
+}
+
+void queueSceneUpdate(const char* _path, const char* _value) {
+    map->queueSceneUpdate(_path, _value);
+}
+
+void applySceneUpdates() {
+    map->applySceneUpdates();
 }
 
 bool update() {
@@ -75,20 +91,68 @@ void close() {
     }
 }
 
+float getPixelScale() {
+    map->getPixelScale();
+}
+
+int getViewportHeight() {
+    map->getViewportHeight();
+}
+
+int getViewportWidth() {
+    map->getViewportWidth();
+}
+
 void setPosition(double _lon, double _lat) {
-    map->resize(_lon,_lat);
+    map->setPosition(_lon,_lat);
+}
+
+void setPositionEased(double _lon, double _lat, float _duration, EaseType _e) {
+    map->setPositionEased(_lon, _lat, _duration, Tangram::EaseType(_e));
 }
 
 void setZoom(float _z) {
     map->setZoom(_z);
 }
 
+void setZoomEased(float _z, float _duration, EaseType _e) {
+    map->setZoomEased(_z, _duration, Tangram::EaseType(_e));
+}
+
+float getZoom() {
+    return map->getZoom();
+}
+
 void setRotation(float _radians) {
     map->setRotation(_radians);
 }
 
+void setRotationEased(float _radians, float _duration, EaseType _e) {
+    map->setRotationEased(_radians, _duration, Tangram::EaseType(_e));
+}
+
+float getRotation() {
+    return getRotation();
+}
+
 void setTilt(float _radians) {
     map->setTilt(_radians);
+}
+
+void setTiltEased(float _radians, float _duration, EaseType _e) {
+    map->setTiltEased(_radians, _duration, Tangram::EaseType(_e));
+}
+
+float getTilt() {
+    map->getTilt();
+}
+
+void setCameraType(int _type) {
+    map->setCameraType(_type);
+}
+
+int getCameraType() {
+    return map->getCameraType();
 }
 
 void setPixelScale(float _pixelsPerPoint) {

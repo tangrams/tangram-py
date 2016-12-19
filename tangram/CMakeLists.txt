@@ -115,7 +115,7 @@ set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
 
 swig_add_module(${EXECUTABLE_NAME} python src/tangram.i ${SOURCES})
 if(${PLATFORM_TARGET} MATCHES "linux")
-    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} fontconfig freetype pthread)
+    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} fontconfig freetype pthread -lgcc_s -lgcc)
 elseif(${PLATFORM_TARGET} MATCHES "rpi")
     swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl fontconfig freetype)
 elseif(${PLATFORM_TARGET} MATCHES "osx")

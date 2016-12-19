@@ -15,7 +15,7 @@ endif()
 set(EXECUTABLE_NAME "tangram")
 
 find_package(SWIG REQUIRED)
-find_package(PythonLibs 2.7 REQUIRED)
+find_package(PythonLibs REQUIRED)
 
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")
@@ -74,7 +74,7 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
     message(STATUS "Building config for Darwin OSX")
 
     find_package(OpenGL REQUIRED)
-
+    
     # set for test in other cmake files
     set(PLATFORM_OSX ON)
     add_definitions(-DPLATFORM_OSX)

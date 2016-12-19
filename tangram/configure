@@ -6,7 +6,7 @@ OS=$(uname)
 DIST="UNKNOWN"
 
 # Dependencies
-DEPS_COMMON="cmake " 
+DEPS_COMMON="cmake swig" 
 DEPS_LINUX_COMMON="make g++ libcurl4-openssl-dev uuid-dev libtool pkg-config build-essential autoconf automake lcov"
 DEPS_LINUX_RASPBIAN="curl "
 DEPS_LINUX_UBUNTU="xorg-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libgl1-mesa-dev "

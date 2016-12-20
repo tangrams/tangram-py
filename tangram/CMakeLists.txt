@@ -20,7 +20,10 @@ find_package(PythonLibs REQUIRED)
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")
 
+    set(PLATFORM_RPI ON)
     add_definitions(-DPLATFORM_RPI)
+    set(CORE_COMPILE_DEFS PLATFORM_RPI)
+    include_directories(SYSTEM "/usr/include/fontconfig")
 
     # compiler options
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fpermissive -g")
@@ -32,7 +35,6 @@ if(${PLATFORM_TARGET} MATCHES "rpi")
     include_directories(/opt/vc/include/)
     include_directories(/opt/vc/include/interface/vcos/pthreads)
     include_directories(/opt/vc/include/interface/vmcs_host/linux)
-    include_directories(SYSTEM "/usr/include/fontconfig")
 
 elseif(${PLATFORM_TARGET} MATCHES "linux")
     message(STATUS "Building config for Linux")
@@ -43,7 +45,6 @@ elseif(${PLATFORM_TARGET} MATCHES "linux")
     set(PLATFORM_LINUX ON)
     add_definitions(-DPLATFORM_LINUX)
     set(CORE_COMPILE_DEFS PLATFORM_LINUX)
-    
     include_directories(SYSTEM "/usr/include/fontconfig")
 
     # compiler options
@@ -78,6 +79,7 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
     # set for test in other cmake files
     set(PLATFORM_OSX ON)
     add_definitions(-DPLATFORM_OSX)
+    set(CORE_COMPILE_DEFS DPLATFORM_OSX)
 
     # compiler options
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -std=c++1y ")

@@ -274,6 +274,8 @@ void setCameraType(int _type) {
 int getCameraType() {
     if (map) {
         return map->getCameraType();
+    } else {
+        return -1;
     }
 }
 

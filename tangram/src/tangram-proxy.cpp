@@ -262,7 +262,6 @@ float getTilt() {
     } else {
         return 0.;
     }
-    
 }
 
 void setCameraType(int _type) {

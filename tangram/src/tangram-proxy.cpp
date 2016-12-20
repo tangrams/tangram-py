@@ -180,22 +180,6 @@ LngLat getPosition() {
     return rta;
 }
 
-double getLongitud() {
-    double lng, lat;
-    if (map) {
-        map->getPosition(lng,lat);
-    }
-    return lng;
-}
-
-double getLatitud() {
-    double lng, lat;
-    if (map) {
-        map->getPosition(lng,lat);
-    }
-    return lat;
-}
-
 LngLat screenPositionToLngLat(double _x, double _y) {
     LngLat rta;
     if (map) {

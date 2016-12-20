@@ -64,9 +64,6 @@ void setPositionEased(LngLat _lngLat, float _duration, EaseType _e = QUINT);
 // longitude and latitude
 LngLat getPosition();
 
-double getLongitud();
-double getLatitud();
-
 // Given coordinates in screen space (x right, y down), set the output longitude and
 // latitude to the geographic location corresponding to that point
 LngLat screenPositionToLngLat(double _x, double _y);
@@ -106,5 +103,3 @@ float getTilt();
 void setCameraType(int _type);
 // Get the camera type (0 = perspective, 1 = isometric, 2 = flat)
 int getCameraType();
-
-

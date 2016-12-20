@@ -9,10 +9,5 @@ tangram.setPositionEased(-73.97715657655,40.781098831465,5.,tangram.LINEAR)
 while tangram.isRunning():
     # While is the view is NOT complete
     if (not tangram.update()):
-        # # Print the position
-        # lng = tangram.getLongitud()
-        # lat = tangram.getLatitud()
-        # zoom = tangram.getZoom()
-        # print(lng, lat, zoom)
-
-        print(tangram.getPosition().lng, tangram.getPosition().lat)
+        # Print the position
+        print("Lng/Lat/Zoom", tangram.getPosition().lng, tangram.getPosition().lat, tangram.getZoom())

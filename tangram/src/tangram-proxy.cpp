@@ -219,6 +219,8 @@ void setZoomEased(float _z, float _duration, EaseType _e) {
 float getZoom() {
     if (map) {
         return map->getZoom();
+    } else {
+        return 0.0;
     }
 }
 

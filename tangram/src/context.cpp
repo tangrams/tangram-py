@@ -221,6 +221,26 @@ void initGL (int _width, int _height) {
             }    
         });
 
+        glfwSetScrollCallback(window, [](GLFWwindow* _window, double scrollx, double scrolly) {
+            double x, y;
+            glfwGetCursorPos(window, &x, &y);
+            x *= devicePixelRatio;
+            y *= devicePixelRatio;
+
+            ScrollType type = PINCH;
+            if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == GLFW_PRESS) {
+                type = ROTATE;
+            } else if ( glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS ) {
+                type = SHOVE;
+            }
+
+            onScroll(x, y, scrollx, scrolly, type);
+        });
+
+        glfwSetDropCallback(window, [](GLFWwindow* _window, int count, const char** paths) {
+            onDrop(count, paths);
+        });
+
         glfwSwapInterval(1);
     #endif
 }

@@ -11,7 +11,19 @@ PYTHON_ENUM(EaseType) {
   SINE=3
 };
 
-void init(char * style, int width, int height);
+struct LngLat {
+    double lng;
+    double lat;
+};
+
+struct PointXY {
+    double x;
+    double y;
+};
+
+void init(int width, int height, char * style = "scene.yaml");
+
+bool isRunning();
 
 // Load the scene at the given absolute file path synchronously
 void loadScene(char * style, bool _useScenePosition = false);
@@ -29,8 +41,6 @@ void applySceneUpdates();
 // true when the current view is completely loaded (all tiles are available and
 // no animation in progress)
 bool update();
-// Render a new frame of the map view (if needed)
-void render();
 void close();
 
 // Set the ratio of hardware pixels to logical pixels (defaults to 1.0);
@@ -48,10 +58,23 @@ int getViewportWidth();
 // calling either version of the setter overrides all previous calls
 void setPosition(double _lon, double _lat);
 void setPositionEased(double _lon, double _lat, float _duration, EaseType _e = QUINT);
+void setPosition(LngLat _lngLat);
+void setPositionEased(LngLat _lngLat, float _duration, EaseType _e = QUINT);
 // Set the values of the arguments to the position of the map view in degrees
 // longitude and latitude
-// void getPosition(double& _lon, double& _lat);
+LngLat getPosition();
 
+double getLongitud();
+double getLatitud();
+
+// Given coordinates in screen space (x right, y down), set the output longitude and
+// latitude to the geographic location corresponding to that point
+LngLat screenPositionToLngLat(double _x, double _y);
+
+// Given longitude and latitude coordinates, set the output coordinates to the
+// corresponding point in screen space (x right, y down)
+PointXY lngLatToScreenPosition(double _lng, double _lat);
+PointXY lngLatToScreenPosition(LngLat _lngLat);
 
 // Set the fractional zoom level of the view; if duration (in seconds) is provided,
 // zoom eases to the set value over the duration; calling either version of the setter

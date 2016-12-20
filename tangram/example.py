@@ -3,8 +3,8 @@ import tangram
 
 tangram.init(800,600, 'https://tangrams.github.io/walkabout-style/walkabout-style.yaml')
 
+tangram.setPositionEased(-73.97715657655, 40.781098831465, 5., tangram.LINEAR)
 tangram.setZoom(5);
-tangram.setPositionEased(-73.97715657655,40.781098831465,5.,tangram.LINEAR)
 
 while tangram.isRunning():
     # While is the view is NOT complete

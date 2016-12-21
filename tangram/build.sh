@@ -42,14 +42,7 @@ elif [ $OS == "Darwin" ]; then
     brew install $DEPS_COMMON $DEPS_DARWIN
 fi
 
-if [ ! -d tangram-es ]; then
-    # GET SUBMODULES
-    echo "Installing submodules"
-    git clone https://github.com/tangrams/tangram-es.git
-    cd tangram-es
-    git submodule update --init --recursive
-    cd ..
-fi
+git submodule update --init --recursive
 
 if [ $OS == "Linux" ]; then
     echo "Preparing CMAKE for Linux - $DIST"

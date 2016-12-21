@@ -15,7 +15,7 @@ endif()
 set(EXECUTABLE_NAME "tangram")
 
 find_package(SWIG REQUIRED)
-find_package(PythonLibs 3.5 REQUIRED)
+find_package(PythonLibs REQUIRED)
 
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")

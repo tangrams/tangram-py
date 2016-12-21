@@ -9,8 +9,7 @@ setup(
     author='Mapzen',
     maintainer="Patricio Gonzalez Vivo",
     maintainer_email="patricio@mapzen.com",
+    platforms = ["Mac OS-X", "Linux"],
     license='MIT',
-    packages=find_packages(exclude=('scripts')),
-    package_dir={'tangram': 'tangram'},
-    package_data={'tangram': ['tangram-py']},
+    packages=['tangram']
 )

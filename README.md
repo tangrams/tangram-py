@@ -1,16 +1,15 @@
-# WIP
+# Tangram-Py
+
+Very early WIP
 
 ```bash
 git clone https://github.com/tangrams/tangram-py.git
-cd tangram-py/tangram
-./configure
+cd tangram-py/
+./tangram/build
 ```
 
-### Resources
+## Examples
 
-- http://swig.org/tutorial.html
-- http://www.expobrain.net/2011/01/23/swig-tutorial-for-mac-os-x/
+- `demo.py`: loads a `TangramMap` and ease to New York
 
-### Other cases
-
-- https://github.com/johnglover/pyof
+- `gps.py`: update the center of the map to what ever the GPS points (**Note**: this works only if you have Adafruit GPS)

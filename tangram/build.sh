@@ -87,4 +87,4 @@ else
 fi
 
 cp build/_tangram.so .
-cp build/tangram.py .
+cp build/tangram.py ./TangramMap.py

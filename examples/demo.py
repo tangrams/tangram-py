@@ -3,8 +3,7 @@ import sys
 sys.path.append('../')
 
 from tangram import TangramMap
-
-TangramMap.init(800,600, 'scene.yaml')
+TangramMap.init(800,600, 'https://tangrams.github.io/walkabout-style/walkabout-style.yaml')
 
 TangramMap.setPositionEased(-73.97715657655, 40.781098831465, 10., TangramMap.LINEAR)
 TangramMap.setZoom(5);

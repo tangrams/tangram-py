@@ -5,7 +5,7 @@ Very early WIP
 ```bash
 git clone https://github.com/tangrams/tangram-py.git
 cd tangram-py/
-./tangram/build
+./tangram/build.sh
 ```
 
 ## Examples

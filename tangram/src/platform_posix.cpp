@@ -107,20 +107,7 @@ unsigned char* bytesFromFile(const char* _path, size_t& _size) {
     return reinterpret_cast<unsigned char *>(cdata);
 }
 
-#ifdef PLATFORM_OSX
-FontSourceHandle getFontHandle(const char* _path) {
-    FontSourceHandle fontSourceHandle = [_path](size_t* _size) -> unsigned char* {
-        LOG("Loading font %s", _path);
-
-        auto cdata = bytesFromFile(_path, *_size);
-
-        return cdata;
-    };
-
-    return fontSourceHandle;
-}
-#else
-
+#ifndef PLATFORM_OSX
 void initPlatformFontSetup() {
     static bool s_platformFontsInit = false;
     if (s_platformFontsInit) { return; }
@@ -174,11 +161,11 @@ std::vector<FontSourceHandle> systemFontFallbacksHandle() {
     std::vector<FontSourceHandle> handles;
 
     #ifdef PLATFORM_OSX
-        handles.push_back(getFontHandle(DEFAULT));
-        handles.push_back(getFontHandle(FONT_AR));
-        handles.push_back(getFontHandle(FONT_HE));
-        handles.push_back(getFontHandle(FONT_JA));
-        handles.push_back(getFontHandle(FALLBACK));
+        handles.emplace_back(DEFAULT);
+        handles.emplace_back(FONT_AR);
+        handles.emplace_back(FONT_HE);
+        handles.emplace_back(FONT_JA);
+        handles.emplace_back(FALLBACK);
     #else
     initPlatformFontSetup();
     for (auto& path : s_fallbackFonts) {

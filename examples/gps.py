@@ -16,6 +16,8 @@ try:
             longitude = the_fix.TPV['lon']
             altitude  = the_fix.TPV['alt']
 
+            print (latitude, longitude)
+
 # sys.path.append('../')
 # from tangram import TangramMap
 

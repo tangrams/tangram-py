@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 
 # NOTE: you need to set up you GPS hat first, follow this tutorial
-# https://www.modmypi.com/blog/raspberry-pi-gps-hat-and-python
-import sys, serial
-import pynmea2
-
-def parseGPS(str):
-    if str.find('GGA') > 0:
-        msg = pynmea2.parse(str)
-        print ("Timestamp: %s -- Lat: %s %s -- Lon: %s %s -- Altitude: %s %s" % (msg.timestamp,msg.lat,msg.lat_dir,msg.lon,msg.lon_dir,msg.altitude,msg.altitude_units))
-
-serialPort = serial.Serial("/dev/ttyAMA0", 9600, timeout=0.5)
-
-while True:
-    str = serialPort.readline()
-    parseGPS(str)
+#       https://learn.adafruit.com/adafruit-ultimate-gps-hat-for-raspberry-pi/
+# then install gps3 module: sudo pip install gps3 
+import sys, gps3
+the_connection = gps3.GPSDSocket() 
+the_fix = gps3.Fix()
+try:
+    for new_data in the_connection:
+        if new_data:
+            the_fix.refresh(new_data)
+        if not isinstance(the_fix.TPV['lat'], str): # lat as determinate of when data is 'valid'
+            speed = the_fix.TPV['speed']
+            latitude = the_fix.TPV['lat']
+            longitude = the_fix.TPV['lon']
+            altitude  = the_fix.TPV['alt']
 
 # sys.path.append('../')
 # from tangram import TangramMap

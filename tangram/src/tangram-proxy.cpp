@@ -49,7 +49,7 @@ int keyPressed = 0;
 std::shared_ptr<Tangram::ClientGeoJsonSource> data_source;
 Tangram::LngLat last_point;
 
-void init(int width, int height, char * style) {
+void init(int width, int height, const char * style) {
      // Initialize cURL
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -72,14 +72,14 @@ bool isRunning() {
     return map != nullptr;
 }
 
-void loadScene(char * style, bool _useScenePosition) {
+void loadScene(const char * style, bool _useScenePosition) {
     if (map) {
         sceneFile = std::string(style);
         map->loadScene(style, _useScenePosition);
     }
 }
 
-void loadSceneAsync(char * style, bool _useScenePosition) {
+void loadSceneAsync(const char * style, bool _useScenePosition) {
     if (map) {
         sceneFile = std::string(style);
         map->loadSceneAsync(style, _useScenePosition);
@@ -125,6 +125,8 @@ void close() {
 
     closeGL();
 }
+
+// SET/GET
 
 float getPixelScale() {
     if (map) {
@@ -284,6 +286,104 @@ void setPixelScale(float _pixelsPerPoint) {
     }
 }
 
+// MARKERS
+
+MarkerID markerAdd() {
+    if (map) {
+        return map->markerAdd();
+    } else {
+        return -1;
+    }
+}
+
+bool markerRemove(MarkerID _marker) {
+    if (map) {
+        return map->markerRemove(Tangram::MarkerID(_marker));
+    } else {
+        return false;
+    }
+}
+
+bool markerSetStyling(MarkerID _marker, const char* _styling) {
+    if (map) {
+        return map->markerSetStyling(Tangram::MarkerID(_marker), _styling);
+    } else {
+        return false;
+    }
+}
+
+bool markerSetBitmap(MarkerID _marker, int _width, int _height, const unsigned int* _data) {
+    if (map) {
+        return map->markerSetBitmap(Tangram::MarkerID(_marker), _width, _height, _data);
+    } else {
+        return false;
+    }
+}
+
+bool markerSetPoint(MarkerID _marker, LngLat _lngLat) {
+    if (map) {
+        return map->markerSetPoint(Tangram::MarkerID(_marker), Tangram::LngLat(_lngLat.lng,_lngLat.lat));
+    } else {
+        return false;
+    }
+}
+
+bool markerSetPointEased(MarkerID _marker, LngLat _lngLat, float _duration, EaseType _ease) {
+    if (map) {
+        return map->markerSetPointEased(Tangram::MarkerID(_marker), Tangram::LngLat(_lngLat.lng,_lngLat.lat), _duration, Tangram::EaseType(_ease));
+    } else {
+        return false;
+    }
+}
+
+bool markerSetPolyline(MarkerID _marker, LngLat* _coordinates, int _count) {
+    if (map) {
+        std::vector<Tangram::LngLat> coordinates;
+        for (int i = 0; i < _count; i++) {
+            coordinates.push_back(Tangram::LngLat(_coordinates[i].lng,_coordinates[i].lat));
+        }
+        return map->markerSetPolyline(Tangram::MarkerID(_marker), coordinates.data(), _count);
+    } else {
+        return false;
+    }
+}
+
+// bool markerSetPolygon(MarkerID _marker, LngLat* _coordinates, int* _counts, int _rings) {
+//     if (map) {
+//         Tangram::LngLat coordinates[_count][];
+//         for (int i = 0; i < _count; i++) {
+//             coordinates[i] = Tangram::LngLat(_coordinates[i].lng,_coordinates[i].lat);
+//         }
+//         return map->markerSetPolygon(Tangram::MarkerID(_marker), _coordinates, _counts, _rings);
+//     } else {
+//         return false;
+//     }
+// }
+
+bool markerSetVisible(MarkerID _marker, bool _visible) {
+    if (map) {
+        return map->markerSetVisible(Tangram::MarkerID(_marker), _visible);
+    } else {
+        return false;
+    }
+}
+
+bool markerSetDrawOrder(MarkerID _marker, int _drawOrder) {
+    if (map) {
+        return map->markerSetVisible(Tangram::MarkerID(_marker), _drawOrder);
+    } else {
+        return false;
+    }
+}
+
+void markerRemoveAll() {
+    if (map) {
+        map->markerRemoveAll();
+    }
+}
+
+// EVENTS
+
 void onKeyPress(int _key) {
     if (map) {
         keyPressed = _key;
@@ -386,3 +486,5 @@ void onViewportResize(int _newWidth, int _newHeight) {
         map->resize(getWindowWidth(), getWindowHeight());
     }
 }
+
+

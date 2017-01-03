@@ -3,6 +3,7 @@
 set -e
 
 OS=$(uname)
+ARQ=$(uname -m)
 DIST="UNKNOWN"
 
 # Dependencies
@@ -15,6 +16,7 @@ DEPS_DARWIN="glfw3 pkg-config "
 # Compiling
 CMAKE_ARG=""
 N_CORES=1
+LIB_POSFIX="libtangram-$OS-$ARQ.a"
 
 # what linux distribution is?
 if [ -f /etc/os-release ]; then
@@ -79,5 +81,6 @@ else
     cd ..
 fi
 
-cp build/_tangram.so .
-cp build/tangram.py ./TangramMap.py
+cp build/libtangram.a ./$LIB_POSFIX
+# cp build/_tangram.so .
+# cp build/tangram.py ./TangramMap.py

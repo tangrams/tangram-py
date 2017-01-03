@@ -20,11 +20,11 @@
 #include <sys/syscall.h>
 
 #ifdef PLATFORM_OSX
-#define DEFAULT "fonts/NotoSans-Regular.ttf"
-#define FONT_AR "fonts/NotoNaskh-Regular.ttf"
-#define FONT_HE "fonts/NotoSansHebrew-Regular.ttf"
-#define FONT_JA "fonts/DroidSansJapanese.ttf"
-#define FALLBACK "fonts/DroidSansFallback.ttf"
+#define DEFAULT "./fonts/NotoSans-Regular.ttf"
+#define FONT_AR "./fonts/NotoNaskh-Regular.ttf"
+#define FONT_HE "./fonts/NotoSansHebrew-Regular.ttf"
+#define FONT_JA "./fonts/DroidSansJapanese.ttf"
+#define FALLBACK "./fonts/DroidSansFallback.ttf"
 #else
 #include <fontconfig.h>
 static std::vector<std::string> s_fallbackFonts;

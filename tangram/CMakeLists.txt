@@ -12,10 +12,12 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/tangram-es/external/alfons/CMakeLists.txt")
 endif()
 
 # common compiler options
-set(EXECUTABLE_NAME "tangram")
+set(LIB_NAME "tangram")
 
-find_package(SWIG REQUIRED)
-find_package(PythonLibs REQUIRED)
+find_sources_and_include_directories(
+  ${PROJECT_SOURCE_DIR}/src/context.cpp
+  ${PROJECT_SOURCE_DIR}/src/tangram-proxy.cpp
+  ${PROJECT_SOURCE_DIR}/src/platform_posix.cpp)
 
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")
@@ -29,7 +31,6 @@ if(${PLATFORM_TARGET} MATCHES "rpi")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fpermissive -g")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_CXX_FLAGS} -L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvchiq_arm -lvcos -lrt -lpthread")
     set(CXX_FLAGS_DEBUG "-g -O0")
-
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
     
     include_directories(/opt/vc/include/)
@@ -92,39 +93,55 @@ elseif(${PLATFORM_TARGET} MATCHES "osx")
 endif()
 
 # add sources and include headers
+find_sources_and_include_directories(
+    ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.h
+    ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.cpp)
+
+# add sources and include headers
+find_sources_and_include_directories(
+    ${PROJECT_SOURCE_DIR}/tangram-es/core/common/platform_gl.h
+    ${PROJECT_SOURCE_DIR}/tangram-es/core/common/platform_gl.cpp)
+
+# add sources and include headers
 add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/external)
 add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/core)
 include_directories(${CORE_INCLUDE_DIRS})
 include_directories(${CORE_LIBRARIES_INCLUDE_DIRS} )
 
-set(SOURCES
-  ${PROJECT_SOURCE_DIR}/src/context.cpp
-  ${PROJECT_SOURCE_DIR}/src/tangram-proxy.cpp
-  ${PROJECT_SOURCE_DIR}/src/platform_posix.cpp
-  ${PROJECT_SOURCE_DIR}/tangram-es/linux/src/urlWorker.cpp
-  ${PROJECT_SOURCE_DIR}/tangram-es/core/common/platform_gl.cpp)
+add_library(${LIB_NAME} ${SOURCES})
 
-include(${SWIG_USE_FILE})
-include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${PROJECT_SOURCE_DIR}/tangram-es/core/)
-include_directories(${PROJECT_SOURCE_DIR}/tangram-es/linux/src)
-include_directories(${PROJECT_SOURCE_DIR}/tangram-es/core/common)
+target_link_libraries(${LIB_NAME} -fPIC ${CORE_LIBRARY})
+target_link_libraries(${LIB_NAME} -lcurl)
 
-set(CMAKE_SWIG_FLAGS "")
-set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
-#set_source_files_properties(src/tangram.i PROPERTIES SWIG_FLAGS "-includeall")
-
-swig_add_module(${EXECUTABLE_NAME} python src/tangram.i ${SOURCES})
 if(${PLATFORM_TARGET} MATCHES "linux")
-    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} fontconfig freetype pthread gcc_s gcc)
+    target_link_libraries(${LIB_NAME} glfw)
+    target_link_libraries(${LIB_NAME} ${OPENGL_LIBRARIES})
+    target_link_libraries(${LIB_NAME} -lfontconfig)
+    target_link_libraries(${LIB_NAME} -lfreetype)
+
 elseif(${PLATFORM_TARGET} MATCHES "rpi")
-    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl -L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvchiq_arm -lvcos -lrt fontconfig freetype pthread gcc_s gcc)
+    target_link_libraries(${LIB_NAME} -lfontconfig)
+    target_link_libraries(${LIB_NAME} -lfreetype)
+
 elseif(${PLATFORM_TARGET} MATCHES "osx")
-    swig_link_libraries(${EXECUTABLE_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES})
+    target_link_libraries(${LIB_NAME} glfw)
+    target_link_libraries(${LIB_NAME} ${OPENGL_LIBRARIES})
+
 endif()
 
-execute_process(COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-install(FILES _tangram DESTINATION ${PYTHON_SITE_PACKAGES})
-install(FILES ${CMAKE_BINARY_DIR}/src/tangram.py DESTINATION ${PYTHON_SITE_PACKAGES})
-message(STATUS "Python destination folder" ${PYTHON_SITE_PACKAGES})
+# set(CMAKE_SWIG_FLAGS "")
+# set_source_files_properties(src/tangram.i PROPERTIES CPLUSPLUS ON)
+
+# swig_add_module(${LIB_NAME} python src/tangram.i ${SOURCES})
+# if(${PLATFORM_TARGET} MATCHES "linux")
+#     swig_link_libraries(${LIB_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES} fontconfig freetype pthread gcc_s gcc)
+# elseif(${PLATFORM_TARGET} MATCHES "rpi")
+#     swig_link_libraries(${LIB_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl -L/opt/vc/lib/ -lGLESv2 -lEGL -lbcm_host -lvchiq_arm -lvcos -lrt fontconfig freetype pthread gcc_s gcc)
+# elseif(${PLATFORM_TARGET} MATCHES "osx")
+#     swig_link_libraries(${LIB_NAME} ${CORE_LIBRARY} ${PYTHON_LIBRARIES} curl glfw ${OPENGL_LIBRARIES})
+# endif()
+
+# execute_process(COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+# install(FILES _tangram DESTINATION ${PYTHON_SITE_PACKAGES})
+# install(FILES ${CMAKE_BINARY_DIR}/src/tangram.py DESTINATION ${PYTHON_SITE_PACKAGES})
+# message(STATUS "Python destination folder" ${PYTHON_SITE_PACKAGES})

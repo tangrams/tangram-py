@@ -34,7 +34,8 @@ includes = """tangram/src/
 sources = """tangram/tangram.i""".split()
 
 if get_platform() == "darwin":
-    link_args = """tangram/libtangram-Darwin-x86_64.a""".split()
+    link_args = """-fPIC 
+                   tangram/libtangram-Darwin-x86_64.a""".split()
 
 doc_lines = __doc__.split("\n")
 tangram_module = Extension(  'tangram/_tangram',

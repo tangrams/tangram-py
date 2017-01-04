@@ -107,7 +107,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/tangram-es/core)
 include_directories(${CORE_INCLUDE_DIRS})
 include_directories(${CORE_LIBRARIES_INCLUDE_DIRS} )
 
-add_library(${LIB_NAME} ${SOURCES})
+add_library(${LIB_NAME} STATIC ${SOURCES})
 
 target_link_libraries(${LIB_NAME} PUBLIC -fPIC ${CORE_LIBRARY})
 target_link_libraries(${LIB_NAME} -lcurl)

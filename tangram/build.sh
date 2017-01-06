@@ -7,7 +7,7 @@ DIST="UNKNOWN"
 
 # Dependencies
 DEPS_COMMON="cmake swig " 
-DEPS_LINUX_COMMON="build-essential g++ make libtool pkg-config autoconf automake lcov libcurl4-openssl-dev python-dev python3-dev uuid-dev "
+DEPS_LINUX_COMMON="build-essential g++ make libtool pkg-config autoconf automake lcov fontconfig libcurl4-openssl-dev python-dev python3-dev uuid-dev "
 DEPS_LINUX_RASPBIAN="curl "
 DEPS_LINUX_UBUNTU="xorg-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libgl1-mesa-dev "
 DEPS_DARWIN="glfw3 pkg-config "

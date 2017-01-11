@@ -14,6 +14,9 @@ endif()
 # common compiler options
 set(LIB_NAME "tangram")
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
 if(${PLATFORM_TARGET} MATCHES "rpi")
     message(STATUS "Building config for RaspberryPI")
 
@@ -109,14 +112,11 @@ include_directories(${CORE_LIBRARIES_INCLUDE_DIRS} )
 
 add_library(${LIB_NAME} STATIC ${SOURCES})
 
-target_link_libraries(${LIB_NAME} PUBLIC -fPIC ${CORE_LIBRARY})
-target_link_libraries(${LIB_NAME} -lcurl)
+target_link_libraries(${LIB_NAME} PUBLIC -fPIC ${CORE_LIBRARY} -lcurl)
 
 if(${PLATFORM_TARGET} MATCHES "linux")
-    target_link_libraries(${LIB_NAME} glfw)
-    target_link_libraries(${LIB_NAME} ${OPENGL_LIBRARIES})
-    target_link_libraries(${LIB_NAME} -lfontconfig)
-    target_link_libraries(${LIB_NAME} -lfreetype)
+    target_link_libraries(${LIB_NAME} PRIVATE glfw)
+    target_link_libraries(${LIB_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
 elseif(${PLATFORM_TARGET} MATCHES "rpi")
     target_link_libraries(${LIB_NAME} -lfontconfig)

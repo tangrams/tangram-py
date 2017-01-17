@@ -35,20 +35,19 @@ includes = """tangram/src/
 # source files
 sources = """tangram/tangram.i""".split()
 
-if get_platform() == "darwin":
-    link_args = """-fPIC
-                   tangram/libtangram-Darwin-x86_64.a""".split()
-
-elif get_platform() == "linux":
-    link_args = """-fPIC
-                   tangram/lib/libtangram.a
-                   tangram/lib/libalfons.a
-                   tangram/lib/libcore.a
-                   tangram/lib/libcss-color-parser-cpp.a
-                   tangram/lib/libduktape.a
-                   tangram/lib/libgeojson-vt-cpp.a
-                   tangram/lib/liblinebreak.a
-                   tangram/lib/libyaml-cpp.a""".split()
+link_args = """-fPIC
+               tangram/lib/libalfons.a
+               tangram/lib/libcore.a
+               tangram/lib/libcss-color-parser-cpp.a
+               tangram/lib/libduktape.a
+               tangram/lib/libfreetype.a
+               tangram/lib/libgeojson-vt-cpp.a
+               tangram/lib/libglfw3.a
+               tangram/lib/libharfbuzz.a
+               tangram/lib/libicucommon.a
+               tangram/lib/liblinebreak.a
+               tangram/lib/libtangram.a
+               tangram/lib/libyaml-cpp.a""".split()
 
 
 doc_lines = __doc__.split("\n")
